@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Ansible CI:
+  ansible-lint:
     name: Ansible Lint
     runs-on: ubuntu-latest
     environment: development
