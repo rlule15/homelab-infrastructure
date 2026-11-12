@@ -1,0 +1,13 @@
+- name: Update debian based linux machines
+  when: ansible_facts['os_family'] == "Debian"
+  become: true
+  block:
+    - name: Running apt update and upgrade
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: true
+        cache_valid_time: 3600
+  rescue:
+    - name: Debug message for failed update and upgrade
+      ansible.builtin.debug:
+        msg: "Failed to update and upgrade the system. Please check the apt logs for more details."

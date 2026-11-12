@@ -1,0 +1,11 @@
+- name: Update linux machine
+  ansible.builtin.include_tasks:
+    file: updates.yml
+
+- name: Install, configure and enable firewall
+  ansible.builtin.include_tasks:
+    file: firewall.yml
+
+- name: Install baseline system and Python packages
+  ansible.builtin.include_tasks:
+    file: packages.yml

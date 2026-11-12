@@ -1,0 +1,46 @@
+- name: Configure UFW firewall
+  when: ansible_facts['os_family'] == "Debian"
+  become: true
+  block:
+    - name: Install UFW firewall
+      ansible.builtin.apt:
+        name: ufw
+        state: present
+
+    - name: Allow all outgoing connections
+      community.general.ufw:
+        rule: allow
+        direction: out
+
+    - name: Allow OpenSSH through the firewall
+      community.general.ufw:
+        rule: allow
+        name: OpenSSH
+
+    - name: Allow ssh connections via port 22
+      community.general.ufw:
+        rule: allow
+        port: 22
+        proto: tcp
+
+    - name: Limit SSH connections to prevent brute-force attacks
+      community.general.ufw:
+        rule: limit
+        name: OpenSSH
+
+    - name: Deny all incoming connections by default
+      community.general.ufw:
+        rule: deny
+        direction: in
+
+    - name: Enable UFW firewall
+      community.general.ufw:
+        state: enabled
+  rescue:
+    - name: Debug message for failed firewall configuration
+      ansible.builtin.debug:
+        msg: "Failed to configure the firewall. Please check the UFW logs for more details."
+
+    - name: Disable UFW firewall
+      community.general.ufw:
+        state: disabled

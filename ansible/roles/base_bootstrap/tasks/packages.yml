@@ -1,0 +1,29 @@
+- name: Install basline system and Python packages
+  when: ansible_facts['os_family'] == "Debian"
+  become: true
+  block:
+    - name: Install baseline system and Python packages
+      ansible.builtin.apt:
+        name:
+          - htop
+          - curl
+          - wget
+          - git
+          - python3
+          - python3-pip
+          - python3-venv
+          - neovim
+          - python3-neovim
+        state: present
+
+    - name: Install Proxmox guest os
+      ansible.builtin.apt:
+        name:
+          - qemu-guest-agent
+        state: present
+      become: true
+      notify: Start QEMU Guest Agent
+  rescue:
+    - name: Debug message for failed package installation
+      ansible.builtin.debug:
+        msg: "Failed to install baseline system and Python packages. Please check the apt logs for more details."
