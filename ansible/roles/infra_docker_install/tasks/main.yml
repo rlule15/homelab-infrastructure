@@ -1,0 +1,6 @@
+- name: Configure docker pre-requisites on debian based systems
+  ansible.builtin.include_tasks: debian.yml
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Install docker packages and add current user to docker group
+  ansible.builtin.include_tasks: docker_install.yml
